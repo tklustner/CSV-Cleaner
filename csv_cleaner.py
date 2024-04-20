@@ -53,7 +53,7 @@ if len(dataframes) == 1:
     drop_duplicate_rows = st.selectbox("Remove duplicate rows", ["Yes", "No"])
     drop_empty_rows = st.selectbox("Remove all empty rows", ["Yes", "No"])
 
-    # removing first row
+    # remove first row
     if drop_first_row == "Yes":
         df = df.iloc[1:,]
 
@@ -63,13 +63,14 @@ if len(dataframes) == 1:
         drop_empty_rows == "Yes",
     )
     dataframes = [df]
-
+    
+    # Display dataframe
     show_df = st.checkbox("Show Data", value=True)
     if show_df:
         for i, df in enumerate(dataframes):
             st.write(f"File {i + 1}")
             st.dataframe(df)
-
+    
     if st.button("Download Cleaned Data") and dataframes:
         for i, df in enumerate(dataframes):
             csv = df.to_csv(index=False)
@@ -87,11 +88,11 @@ elif len(dataframes) > 1:
         )
         drop_duplicate_rows = st.selectbox("Remove duplicate rows", ["Yes", "No"])
         drop_empty_rows = st.selectbox("Remove all empty rows", ["Yes", "No"])
-
-        try:
-            dataframes = [
+        
+        try: 
+            dataframes = [     
                 (df.set_axis(df.iloc[0], axis=1) if keep_header == "Yes" else df)
-                for df in dataframes
+                for df in dataframes 
             ]
 
             merged_df = pd.concat(
