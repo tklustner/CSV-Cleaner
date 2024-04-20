@@ -16,7 +16,7 @@ Click [Here](https://tklustner-csv-cleaner-csv-cleaner-0kafxb.streamlit.app "Her
 - Preview data before download
 - Download cleaned CSVs as separate files
 
-## How to Use
+# How to Use
 
 After entering the app, please select "Browse Files" to select CSVs to upload. Then, you can merge, modify, and download your files as needed.
 
