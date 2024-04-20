@@ -3,7 +3,7 @@
 This streamlit app helps you clean and merge CSV files.
 
 # Web App
-Click [Here] (https://tklustner-csv-cleaner-csv-cleaner-0kafxb.streamlit.app/ "Here") to use the app online.
+Click [Here](https://tklustner-csv-cleaner-csv-cleaner-0kafxb.streamlit.app "Here") to use the app online.
 
 # Features
 
