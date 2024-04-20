@@ -45,18 +45,22 @@ if upload:
         )
     except pd.errors.ParserError as e:  # type: ignore
         dataframes = [pd.read_csv(file, sep=";") for file in upload]
+
 # For single upload
 if len(dataframes) == 1:
     df = dataframes[0]
     drop_first_row = st.selectbox("Remove first row", ["Yes", "No"])
     drop_duplicate_rows = st.selectbox("Remove duplicate rows", ["Yes", "No"])
-    drop_empty_rows = st.selectbox("Remove empty rows", ["Yes", "No"])
+    drop_empty_rows = st.selectbox("Remove all empty rows", ["Yes", "No"])
 
+    # removing first row
     if drop_first_row == "Yes":
         df = df.iloc[1:,]
 
     df = clean_dataframe(
-        df.copy(), drop_duplicate_rows == "Yes", drop_empty_rows == "Yes"
+        df.copy(),
+        drop_duplicate_rows == "Yes",
+        drop_empty_rows == "Yes",
     )
     dataframes = [df]
 
@@ -79,15 +83,16 @@ elif len(dataframes) > 1:
     merge = st.checkbox("Merge CSV files")
     if merge:
         keep_header = st.selectbox(
-            "Make header of the first row of the first file", ["Yes", "No"]
+            "Make first row of first file the header", ["Yes", "No"]
         )
         drop_duplicate_rows = st.selectbox("Remove duplicate rows", ["Yes", "No"])
-        drop_empty_rows = st.selectbox("Remove empty rows", ["Yes", "No"])
+        drop_empty_rows = st.selectbox("Remove all empty rows", ["Yes", "No"])
 
         try:
-            if keep_header == "Yes":
-                for i in range(1, len(dataframes)):
-                    dataframes[i] = dataframes[i][list(dataframes[0].columns)]
+            dataframes = [
+                (df.set_axis(df.iloc[0], axis=1) if keep_header == "Yes" else df)
+                for df in dataframes
+            ]
 
             merged_df = pd.concat(
                 [df.reset_index(drop=True) for df in dataframes],
@@ -96,7 +101,9 @@ elif len(dataframes) > 1:
             )
 
             merged_df = clean_dataframe(
-                merged_df, drop_duplicate_rows == "Yes", drop_empty_rows == "Yes"
+                merged_df,
+                drop_duplicate_rows == "Yes",
+                drop_empty_rows == "Yes",
             )
 
             dataframes = [merged_df]
@@ -113,6 +120,7 @@ elif len(dataframes) > 1:
             st.write(f"File {i + 1}")
             st.dataframe(df)
 
+    # download cleaned CSVs
     if st.button("Download Cleaned Data") and dataframes:
         for i, df in enumerate(dataframes):
             csv = df.to_csv(index=False)
